@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dropdown Menus : Rowe Stodolnic</title>
+  <style>
+    /* Define theme colors */
+    :root {
+      --dark-grey: #474747;   /* 50% dark grey */
+      --black: #000000;       /* 20% black */
+      --white: #ffffff;       /* 20% white */
+      --orange: #FF7700;      /* 10% orange */
+    }
+    /* Outer background is white */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--white);
+      margin: 0;
+      padding: 0;
+      color: var(--black);
+    }
+    /* Main container background is dark grey */
+    .container {
+      width: 80%;
+      margin: auto;
+      background: var(--dark-grey);
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      margin-top: 20px;
+      color: var(--white);
+    }
+    /* Title Dropdown */
+    .title-dropdown {
+      position: relative;
+      text-align: center;
+      cursor: pointer;
+    }
+    .title-dropdown h1 {
+      margin: 0;
+      animation: titleAnimation 3s ease-in-out infinite;
+    }
+    /* New title animation with scale effect */
+    @keyframes titleAnimation {
+      0% { transform: scale(1); color: var(--orange); }
+      50% { transform: scale(1.1); color: var(--white); }
+      100% { transform: scale(1); color: var(--orange); }
+    }
+    .title-menu {
+      display: none;
+      position: absolute;
+      top: 110%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--orange);
+      color: var(--black);
+      padding: 5px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    /* Show the title menu when active */
+    .title-dropdown.active .title-menu {
+      display: block;
+    }
+    p {
+      line-height: 1.5;
+    }
+    /* Reflection Box (shorter) */
+    .reflection {
+      margin: 20px 0;
+      padding: 10px 15px;
+      background: #e0e0e0;
+      border-left: 5px solid var(--orange);
+      font-size: 0.9em;
+      color: var(--black);
+    }
+    .dropdown {
+      margin: 20px 0;
+    }
+    select {
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+    }
+    /* Tabs Navigation */
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid var(--orange);
+      margin-bottom: 20px;
+    }
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      background-color: var(--black);
+      color: var(--white);
+      border: 1px solid var(--orange);
+      border-bottom: none;
+      transition: background-color 0.3s;
+    }
+    .tab.active {
+      background-color: var(--orange);
+      color: var(--black);
+    }
+    /* Hide all tab contents by default */
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    /* Examples Tab Styles */
+    #tab-examples {
+      text-align: center;
+    }
+    #next-example {
+      margin: 0 auto 20px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: var(--orange);
+      color: var(--black);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #next-example:hover {
+      background-color: darkorange;
+    }
+    .example {
+      background: var(--dark-grey);
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      display: none; /* Hide all examples by default */
+    }
+    .example.active {
+      display: block; /* Show the active example */
+    }
+    .example h3 {
+      margin-top: 0;
+    }
+    .example-images {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .example-images figure {
+      margin: 0;
+      text-align: center;
+    }
+    .example-images img {
+      width: 100%;
+      max-width: 400px; /* Larger example images */
+      display: block;
+      margin: auto;
+    }
+    .example-images figcaption {
+      font-size: 1em;
+      margin-top: 5px;
+    }
+    .example p {
+      font-size: 20px; /* Larger description text */
+      color: var(--white);
+    }
+    /* Accessibility Tab Styles */
+    #tab-accessibility .accessibility-images {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    #tab-accessibility .accessibility-images img {
+      width: 100%;
+      max-width: 600px; /* Larger accessibility images */
+    }
+    /* Amazon State Models Tab Styles */
+    #tab-state-models .state-models {
+      text-align: center;
+    }
+    #tab-state-models .state-model-image {
+      width: 100%;
+      max-width: 1000px; /* Larger state model image */
+      display: block;
+      margin: 0 auto;
+    }
+    #tab-state-models .state-model-description {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+    /* Amazon Revised Model Tab Styles */
+    #tab-amazon-revised-model .revised-model {
+      text-align: center;
+    }
+    #tab-amazon-revised-model .revised-model-images {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    #tab-amazon-revised-model .revised-model-image {
+      width: 100%;
+      max-width: 700px;
+      display: block;
+      margin: auto;
+    }
+    #tab-amazon-revised-model .revised-model-description {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+    /* Reflection Tab Styles */
+    #tab-reflection .reflection-tab-content {
+      text-align: center;
+    }
+    #tab-reflection .reflection-tab-image {
+      width: 100%;
+      max-width: 800px;
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Title as a dropdown -->
+    <div class="title-dropdown" onclick="toggleTitleMenu()">
+      <h1>Dropdown Menus : Rowe Stodolnic</h1>
+      <div class="title-menu">Made by Rowe Stodolnic</div>
+    </div>
+    <p>Exploring usability, accessibility, and design considerations for dropdown menus.</p>
+
+    <div class="dropdown">
+      <label for="reflection-select">Select a Point of Reflection:</label>
+      <select id="reflection-select" onchange="showReflection()">
+        <option value="intro">- Select an Option -</option>
+        <option value="process">Interaction</option>
+        <option value="functions">Functions</option>
+        <option value="usability">Usability & Learnability</option>
+        <option value="comparison">Accessibility Comparison</option>
+      </select>
+    </div>
+
+    <div id="reflection-content" class="reflection">
+      <p>Select an option above to see the reflection.</p>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="tabs">
+      <div class="tab active" data-tab="tab-examples">Examples</div>
+      <div class="tab" data-tab="tab-accessibility">Accessibility</div>
+      <div class="tab" data-tab="tab-state-models">Amazon State Models</div>
+      <div class="tab" data-tab="tab-amazon-revised-model">Amazon Revised Model</div>
+      <div class="tab" data-tab="tab-reflection">Reflection</div>
+    </div>
+
+    <!-- Tab Contents -->
+    <div id="tab-examples" class="tab-content active">
+      <!-- Examples Tab: Cycling through examples -->
+      <button id="next-example" onclick="cycleExample()">Next Example</button>
+      
+      <!-- Example 1 -->
+      <div class="example active">
+        <h3>Example 1: Amazon</h3>
+        <div class="example-images">
+          <figure>
+            <img src="amazon1.png" alt="Amazon Default" />
+            <figcaption>DEFAULT</figcaption>
+          </figure>
+          <figure>
+            <img src="amazon2.png" alt="Amazon Hover" />
+            <figcaption>HOVER</figcaption>
+          </figure>
+          <figure>
+            <img src="amazon3.png" alt="Amazon Selection" />
+            <figcaption>SELECTION</figcaption>
+          </figure>
+        </div>
+        <p>Account settings dropdown and search refinement dropdown.</p>
+      </div>
+      
+      <!-- Example 2 -->
+      <div class="example">
+        <h3>Example 2: Spotify</h3>
+        <div class="example-images">
+          <figure>
+            <img src="spotify1.png" alt="Spotify Default" />
+            <figcaption>DEFAULT</figcaption>
+          </figure>
+          <figure>
+            <img src="spotify2.png" alt="Spotify Hover" />
+            <figcaption>HOVER</figcaption>
+          </figure>
+          <figure>
+            <img src="spotify3.png" alt="Spotify Selection" />
+            <figcaption>SELECTION</figcaption>
+          </figure>
+        </div>
+        <p>Account dropdown and song settings dropdown.</p>
+      </div>
+      
+      <!-- Example 3 -->
+      <div class="example">
+        <h3>Example 3: Courses @ Brown</h3>
+        <div class="example-images">
+          <figure>
+            <img src="cab1.png" alt="Courses Default" />
+            <figcaption>DEFAULT</figcaption>
+          </figure>
+          <figure>
+            <img src="cab2.png" alt="Courses Hover" />
+            <figcaption>HOVER</figcaption>
+          </figure>
+          <figure>
+            <img src="cab3.png" alt="Courses Selection" />
+            <figcaption>SELECTION</figcaption>
+          </figure>
+        </div>
+        <p>Term refinement and time slot refinement dropdowns.</p>
+      </div>
+    </div>
+
+    <div id="tab-accessibility" class="tab-content">
+      <!-- Accessibility Tab: Two large static images -->
+      <div class="accessibility-images">
+        <img src="mouse.png" alt="Accessibility Image 1" />
+        <img src="keyboard.png" alt="Accessibility Image 2" />
+      </div>
+    </div>
+
+    <div id="tab-state-models" class="tab-content">
+      <!-- Amazon State Models Tab: Single full-width image with description -->
+      <div class="state-models">
+        <img src="statemodels.png" alt="Amazon State Models" class="state-model-image" />
+        <p class="state-model-description">DESCRIPTION</p>
+      </div>
+    </div>
+
+    <div id="tab-amazon-revised-model" class="tab-content">
+      <!-- Amazon Revised Model Tab: Two images side by side with description -->
+      <div class="revised-model">
+        <div class="revised-model-images">
+          <figure>
+            <img src="revised-1.png" alt="Amazon Revised Model 1" class="revised-model-image" />
+          </figure>
+        </div>
+        <p class="revised-model-description">Amazon Revised Model description goes here.</p>
+      </div>
+    </div>
+
+    <div id="tab-reflection" class="tab-content">
+      <!-- Reflection Tab: Single image -->
+      <div class="reflection-tab-content">
+        <img src="reflection1.png" alt="Reflection" class="reflection-tab-image" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle the title dropdown menu
+    function toggleTitleMenu() {
+      const titleDropdown = document.querySelector('.title-dropdown');
+      titleDropdown.classList.toggle('active');
+    }
+
+    // Reflection selection function
+    function showReflection() {
+      const reflections = {
+        process: "As in the name, these dropdowns provide selectable options. Some offer quick controls with button actions while others navigate to different pages. They typically feature an arrow indicating a drop-down menu.",
+        functions: "The simplest function is to allow selection from a list. You can click outside the dropdown to close it. Some include a search bar to refine options or scrolling for long lists. Dropdowns are not meant for complex content.",
+        usability: "A key feature is the arrow icon found on most dropdown menus, which becomes a recognizable cue for users. The search feature is especially useful when selecting from many options.",
+        comparison: "They work similarly to serve navigation or quick controls. Despite slight variations, none stand out dramatically in either quality or accessibility; they all offer comparable keyboard controls and screen reader compatibility."
+      };
+
+      const selection = document.getElementById("reflection-select").value;
+      document.getElementById("reflection-content").innerHTML = `<p>${
+        reflections[selection] || "Select an option above to see the reflection."
+      }</p>`;
+    }
+
+    // Example cycling function for the Examples tab
+    let currentExampleIndex = 0;
+    const examples = document.querySelectorAll('#tab-examples .example');
+
+    function cycleExample() {
+      examples[currentExampleIndex].classList.remove('active');
+      currentExampleIndex = (currentExampleIndex + 1) % examples.length;
+      examples[currentExampleIndex].classList.add('active');
+    }
+
+    // Tab switching functionality
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        // Remove active class from all tabs and hide all tab contents
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(tc => tc.classList.remove('active'));
+
+        // Activate the clicked tab and show its corresponding content
+        this.classList.add('active');
+        const tabId = this.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
